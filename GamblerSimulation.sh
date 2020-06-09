@@ -6,7 +6,7 @@ Win=1
 Loss=0
 Day=1
 numOfDays=20
-
+totalWinOrloss=0
 echo "Initial Stake $Stake"
 
 stakePercentAmount=$(( 50*$Stake/100 ))
