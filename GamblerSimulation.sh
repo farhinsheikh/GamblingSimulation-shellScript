@@ -5,6 +5,7 @@ Bet=1
 Win=1
 Loss=0
 Day=1
+numOfDays=20
 
 echo "Initial Stake $Stake"
 
@@ -12,7 +13,7 @@ stakePercentAmount=$(( 50*$Stake/100 ))
 max_win=$(( $stakePercentAmount+$Stake ))
 max_loss=$(( $Stake-$stakePercentAmount ))
 
-function result()
+function getresult()
 {
 	while [ $Stake -lt $max_win ] && [ $Stake -gt $max_loss ]
 		do
@@ -20,14 +21,27 @@ function result()
 
         if [ $random -eq 1 ]
         then
-                Stake=$(( Stake+Bet ))
+				Stake=$(( Stake+$Bet ))
         else
-                Stake=$(( Stake-Bet ))
+				Stake=$(( Stake-$Bet ))
         fi
 		done
 }
 
-result
+	for (( day=0; day<$numOfDays; day++ ))
+		do
+        getresult
 
-echo $Stake
-echo "Resign for the day"
+			if [ $Stake -eq $max_loss ]
+				then
+					totalWinOrloss=$(( totalWinOrloss-50 ))
+				else
+                totalWinOrloss=$(( totalWinOrloss+50 ))
+			fi
+        		echo "Resign for the day"
+        done
+
+ echo "Total win or loss=$totalWinOrloss"
+
+
+
