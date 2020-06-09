@@ -4,14 +4,18 @@ stake=100
 Bet=1
 Win=1
 Loss=0
-Day=1
 
 echo "Initial Stake $Stake"
 
-stakePercentAmount=$(( 50*$stake/100 ))
+stakePercentAmount=$(( 50 * $stake/100 ))
 max_win=$(( $stakePercentAmount+$stake ))
 max_loss=$(( $stake-$stakePercentAmount ))
-numOfDays=20
+numOfDays=30
+totalWinOrLoss=0
+daysWin=0
+daysLoss=0
+
+declare -A fullDay
 
 function getresult()
 {
@@ -22,9 +26,9 @@ function getresult()
 
         if [ $random -eq 1 ]
         then
-				dayStake=$(( dayStake+$Bet ))
+				dayStake=$(( $dayStake+$Bet ))
         else
-				dayStake=$(( dayStake-$Bet ))
+				dayStake=$(( $dayStake-$Bet ))
         fi
 		done
 }
@@ -35,13 +39,19 @@ function getresult()
 
 			if [ $dayStake -eq $max_loss ]
 				then
-					totalWinOrloss=$(( totalWinOrloss-50 ))
+					totalWinOrloss=$(( $totalWinOrloss-$stakePercentAmount ))
+					fullDay["Day $day"]=-$stakePercentAmount
+               (( daysLoss++ ))
 				else
-                totalWinOrloss=$(( totalWinOrloss+50 ))
-			fi
-        done
+					totalWinOrloss=$(( $totalWinOrloss+$stakePercentAmount ))
+					fullDay["Day $day"]=$stakePercentAmount
+					(( daysWin++ ))
+			 fi
+		done
 
- echo "Total win or loss amount for 20 days is $totalWinOrloss"
+echo "No. of days Win $daysWin by $(($daysWin*$stakePercentAmount))"
+echo "No. of days Loss $daysLoss by $(($daysLoss*$stakePercentAmount))"
+
 
 
 
