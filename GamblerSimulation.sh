@@ -1,29 +1,34 @@
 echo "Welcome to gambling simulation problem"
 
-Stake=100
+stake=100
 Bet=1
 Win=1
 Loss=0
-Day=1
-numOfDays=20
 
 echo "Initial Stake $Stake"
 
-stakePercentAmount=$(( 50*$Stake/100 ))
-max_win=$(( $stakePercentAmount+$Stake ))
-max_loss=$(( $Stake-$stakePercentAmount ))
+stakePercentAmount=$(( 50 * $stake/100 ))
+max_win=$(( $stakePercentAmount+$stake ))
+max_loss=$(( $stake-$stakePercentAmount ))
+numOfDays=30
+totalWinOrLoss=0
+daysWin=0
+daysLoss=0
+
+declare -A fullDay
 
 function getresult()
 {
-	while [ $Stake -lt $max_win ] && [ $Stake -gt $max_loss ]
+	dayStake=$stake
+	while [ $dayStake -lt $max_win ] && [ $dayStake -gt $max_loss ]
 		do
         random=$(( RANDOM%2 ))
 
         if [ $random -eq 1 ]
         then
-				Stake=$(( Stake+$Bet ))
+				dayStake=$(( $dayStake+$Bet ))
         else
-				Stake=$(( Stake-$Bet ))
+				dayStake=$(( $dayStake-$Bet ))
         fi
 		done
 }
@@ -32,16 +37,20 @@ function getresult()
 		do
         getresult
 
-			if [ $Stake -eq $max_loss ]
+			if [ $dayStake -eq $max_loss ]
 				then
-					totalWinOrloss=$(( totalWinOrloss-50 ))
+					totalWinOrloss=$(( $totalWinOrloss-$stakePercentAmount ))
+					fullDay["Day $day"]=-$stakePercentAmount
+               (( daysLoss++ ))
 				else
-                totalWinOrloss=$(( totalWinOrloss+50 ))
-			fi
-        		echo "Resign for the day"
-        done
+					totalWinOrloss=$(( $totalWinOrloss+$stakePercentAmount ))
+					fullDay["Day $day"]=$stakePercentAmount
+					(( daysWin++ ))
+			 fi
+		done
 
- echo "Total win or loss=$totalWinOrloss"
+echo "No. of days Win $daysWin by $(($daysWin*$stakePercentAmount))"
+echo "No. of days Loss $daysLoss by $(($daysLoss*$stakePercentAmount))"
 
 
 
