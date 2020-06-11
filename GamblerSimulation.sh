@@ -1,12 +1,12 @@
+#!/bin/bash -x
 echo "Welcome to gambling simulation problem"
 
 #constants
 STAKE=100
-NUM_OFDAYS=30
+NUM_OF_DAYS=30
 WIN=1
 LOSS=0
 BET=1
-IS_VALID=true
 LAST_LOSSAMOUNT=0
 
 echo "Initial Stake $STAKE"
@@ -41,7 +41,7 @@ function getdailyBet()
 
 function getmonthBet(){
 
-   for (( day=1; day<=$NUM_OFDAYS; day++ ))
+   for (( day=1; day<=$NUM_OF_DAYS; day++ ))
    do
    getdailyBet
       if [ $dayStake -eq $maxLoss ]
@@ -80,7 +80,7 @@ function getmonthBet(){
 }
 
 function isContinuePlaying(){
-while [ $IS_VALID ]
+while [ true ]
 do
    getmonthBet
    if [ $totalWinOrLoss -lt $LAST_LOSSAMOUNT ]
